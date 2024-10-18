@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: category-service-app  # This is the internal DNS name
+spec:
+  selector:
+    app: category-service      # Must match the labels in your deployment
+  ports:
+    - protocol: TCP
+      port: 8081              # The port that other services will use to connect
+      targetPort: 8081        # The port exposed by the container
+  type: ClusterIP              # Exposes the service only within the cluster

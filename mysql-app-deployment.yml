@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: category-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: categoryMysql
+  template:
+    metadata:
+      labels:
+        app: categoryMysql
+    spec:
+      containers:
+        - name: categorymysql
+          image: mysql:8.0
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: category-service-secret
+                  key: SPRING_DATASOURCE_PASSWORD  # This references the secret for MySQL password
+
+            - name: MYSQL_DATABASE
+              value: serviceprovider  # This will create a default 'serviceprovider' DB on startup
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: category-storage
+      volumes:
+        - name: category-storage
+          persistentVolumeClaim:
+            claimName: mysql-category-claim

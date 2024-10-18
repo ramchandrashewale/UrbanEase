@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-category-pv
+spec:
+  capacity:
+    storage: 5Gi              # The amount of storage is sufficient for this setup
+  accessModes:
+    - ReadWriteOnce           # Only one node can read and write at a time
+  hostPath:
+    path: /mnt/data            # Path on the node for local development; use cloud/NFS in production
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-category-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi             # Make sure this matches the PV's capacity

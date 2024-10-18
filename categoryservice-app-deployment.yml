@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: category-service
+  labels:
+    app: category-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: category-service  # This should match the labels in the pod template
+  template:
+    metadata:
+      labels:
+        app: category-service  # This should match the selector labels
+    spec:
+      containers:
+        - name: category-service-app  # Container name (keeping it lowercase is a good practice)
+          image: ramchandrashewale/categoryservice:v1
+          ports:
+            - containerPort: 8081
+          env:
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: category-service-config
+                  key: SPRING_DATASOURCE_URL
+
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: category-service-secret
+                  key: SPRING_DATASOURCE_USERNAME
+
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: category-service-secret
+                  key: SPRING_DATASOURCE_PASSWORD

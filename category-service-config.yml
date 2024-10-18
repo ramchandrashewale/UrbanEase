@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: category-service-config
+data:
+  SPRING_DATASOURCE_URL: "jdbc:mysql://category-service-mysql:3306/serviceprovider"
+
+

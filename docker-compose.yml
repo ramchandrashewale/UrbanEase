@@ -1,0 +1,38 @@
+
+
+services:
+  categoryService:
+    image: categoryservice-app:latest  # Corrected the image name
+    build:
+      context: .  # Build context
+      dockerfile: Dockerfile  # Path to your Dockerfile if it's not in the same directory
+    ports:
+      - "8082:8081"  # Map host port to container port
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/serviceprovider  # Updated to match MySQL service name
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    networks:
+      - my_network  # Connect to the custom network
+    depends_on:
+      - mysql-db  # Wait for the MySQL service to start
+
+  mysql-db:  # Updated service name to match the depends_on
+    image: mysql:8.0  # Specify the MySQL version
+    container_name: mysql-db  # Optional, can be omitted as it's already specified in the service name
+    ports:
+      - "3309:3306"  # Map host port to container port
+    environment:
+      MYSQL_ROOT_PASSWORD: root  # Set the root password
+      MYSQL_DATABASE: serviceprovider  # Initialize the database
+    volumes:
+      - mysql_data:/var/lib/mysql  # Persist MySQL data
+    networks:
+      - my_network  # Connect to the custom network
+
+volumes:
+  mysql_data:  # Define the volume for MySQL data persistence
+
+networks:
+  my_network:  # Reference the existing network
+    external: true  # Indicates that this network is not created by this Compose file
